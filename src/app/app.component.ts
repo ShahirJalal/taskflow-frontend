@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
-import { TaskService, Task } from './task.service';
+import { TaskService } from './task.service';
+import { Task } from './models/task';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({

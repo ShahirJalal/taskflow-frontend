@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Task {
-  id?: number;
-  title: string;
-  completed: boolean;
-}
+import { Task } from './models/task';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +16,7 @@ export class TaskService {
   }
 
   addTask(title: string): Observable<Task> {
-    return this.http.post<Task>(this.apiUrl, { title, completed: false });
+    return this.http.post<Task>(this.apiUrl, { title });
   }
 
   deleteTask(id: number): Observable<void> {

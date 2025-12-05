@@ -30,7 +30,7 @@
         <li *ngFor="let task of tasks; let i = index"
             class="group flex items-center gap-4 p-5 bg-white/15 rounded-2xl hover:bg-white/25 transition backdrop-blur">
           <input type="checkbox" class="w-6 h-6 rounded accent-cyan-400">
-          <span class="flex-1 text-xl text-white">{{ task }}</span>
+          <span class="flex-1 text-xl text-white">{{ task.title }}</span>
           <button
             (click)="deleteTask(i)"
             class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 text-2xl transition">
