@@ -5,17 +5,18 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Faster registry + retry settings
+# Fast registry + retry settings
 RUN npm config set registry https://registry.npmmirror.com \
     && npm config set fetch-retries 5 \
     && npm config set fetch-retry-mintimeout 20000 \
-    && npm config set fetch-retry-maxtimeout 120000 \
-    && npm config set cache-min 9999999
+    && npm config set fetch-retry-maxtimeout 120000
 
 COPY package*.json ./
 
-# Retry install multiple times to avoid ETIMEDOUT
-RUN npm ci --legacy-peer-deps || npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+# Install deps with retry fallback
+RUN npm ci --legacy-peer-deps \
+ || npm ci --legacy-peer-deps \
+ || npm install --legacy-peer-deps
 
 COPY . .
 
@@ -26,7 +27,10 @@ RUN npm run build -- --configuration production
 # ──────────────────────────────────────────────────────────────
 FROM nginx:alpine
 
+# SPA routing + backend proxy
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy built Angular output
 COPY --from=builder /app/dist/frontend /usr/share/nginx/html
 
 EXPOSE 80
