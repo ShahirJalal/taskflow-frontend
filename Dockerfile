@@ -5,14 +5,15 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Fast registry
+# Use fast registry mirror
 RUN npm config set registry https://registry.npmmirror.com
 
+# Install deps
 COPY package*.json ./
 RUN npm ci --legacy-peer-deps
 
+# Copy full source and build
 COPY . .
-
 RUN npm run build -- --configuration production
 
 # ──────────────────────────────────────────────────────────────
@@ -20,11 +21,12 @@ RUN npm run build -- --configuration production
 # ──────────────────────────────────────────────────────────────
 FROM nginx:alpine
 
-# Copy compiled Angular output
+# Copy built Angular app
 COPY --from=builder /app/dist/frontend /usr/share/nginx/html
 
-# If routing exists, enable SPA fallback
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy custom SPA fallback config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]
