@@ -8,10 +8,7 @@ import { Task } from './models/task';
 })
 export class TaskService {
 
-  private apiUrl =
-    window.location.hostname === 'localhost'
-      ? 'http://localhost:8081/api/tasks'
-      : 'https://api.shahirjalal.dev/api/tasks';
+  private apiUrl = 'https://api.shahirjalal.dev/api/tasks';
 
   constructor(private http: HttpClient) { }
 
